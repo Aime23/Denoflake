@@ -20,6 +20,12 @@ class Snowflake {
 
   INCREMENT: number;
 
+  /**
+   * @param opt constructor options
+   * @param [opt.epoch] Epoch timestamp
+   * @param [opt.worker] Worker's id
+   * @param [opt.process] Process's id
+   */
   public constructor(opt: Options = {}) {
     if (opt.epoch instanceof Date) {
       opt.epoch = new Date(opt.epoch).getMilliseconds();
@@ -44,6 +50,10 @@ class Snowflake {
     this.INCREMENT = 0;
   }
 
+  /**
+   * Generate a snowflake
+   * @returns The generated snowflake
+   */
   public generate() {
     const timestamp = new Date(Date.now()).getTime;
     this.INCREMENT++;
@@ -65,6 +75,11 @@ class Snowflake {
     return bigint;
   }
 
+  /**
+  * Decompose a snowflake in it's different components
+  * @param snowflake The snowflake to decompose
+  * @returns The decomposed snowflake
+  */
   public decompose(snowflake: string) {
     const binary = BigInt(snowflake).toString(2);
     const out: SnowflakeType = {
