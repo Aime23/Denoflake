@@ -28,9 +28,9 @@ class Snowflake {
    */
   public constructor(opt: Options = {}) {
     if (opt.epoch instanceof Date) {
-      opt.epoch = new Date(opt.epoch).getMilliseconds();
+      opt.epoch = opt.epoch.getTime();
     }
-
+    
     opt.epoch = !opt.epoch ? 1598911200000 : opt.epoch;
     opt.worker = !opt.worker ? 0 : opt.worker;
     opt.process = !opt.process ? 0 : opt.process;
