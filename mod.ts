@@ -31,7 +31,7 @@ class Snowflake {
       opt.epoch = opt.epoch.getTime();
     }
     
-    opt.epoch = !opt.epoch ? 1598911200000 : opt.epoch;
+    opt.epoch = !opt.epoch ? 1598911200000 : opt.epoch; //Sept 1 2020 00:00:00 GTM+0200
     opt.worker = !opt.worker ? 0 : opt.worker;
     opt.process = !opt.process ? 0 : opt.process;
 
