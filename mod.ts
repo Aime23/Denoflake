@@ -31,7 +31,7 @@ class Snowflake {
       opt.epoch = new Date(opt.epoch).getMilliseconds();
     }
 
-    opt.epoch = !opt.epoch ? 11598911200000 : opt.epoch;
+    opt.epoch = !opt.epoch ? 1598911200000 : opt.epoch;
     opt.worker = !opt.worker ? 0 : opt.worker;
     opt.process = !opt.process ? 0 : opt.process;
 
@@ -56,12 +56,13 @@ class Snowflake {
    */
   public generate() {
     const timestamp = new Date(Date.now()).getTime;
-    this.INCREMENT++;
+    
     if (this.INCREMENT > 4095) this.INCREMENT = 0;
     let out = (Date.now() - this.EPOCH).toString(2).padStart(42, "0");
     out += this.WORKER.toString(2).padStart(5, "0");
     out += this.PROCESS.toString(2).padStart(5, "0");
     out += this.INCREMENT.toString(2).padStart(12, "0");
+    this.INCREMENT++;
     return this.parseBigInt(out, 2).toString();
   }
 
