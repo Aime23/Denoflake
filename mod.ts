@@ -1,10 +1,10 @@
-interface Options {
+export interface Options {
   epoch?: number | Date;
   worker?: number;
   process?: number;
 }
 
-interface SnowflakeType {
+export interface TSnowflake {
   epoch: number;
   timestamp: string;
   worker: string;
@@ -13,7 +13,7 @@ interface SnowflakeType {
   binary: string;
 }
 
-class Snowflake {
+export class Snowflake {
   EPOCH: number;
   WORKER: number;
   PROCESS: number;
@@ -30,7 +30,7 @@ class Snowflake {
     if (opt.epoch instanceof Date) {
       opt.epoch = opt.epoch.getTime();
     }
-    
+
     opt.epoch = !opt.epoch ? 1598911200000 : opt.epoch; //Sept 1 2020 00:00:00 GTM+0200
     opt.worker = !opt.worker ? 0 : opt.worker;
     opt.process = !opt.process ? 0 : opt.process;
@@ -54,9 +54,7 @@ class Snowflake {
    * Generate a snowflake
    * @returns The generated snowflake
    */
-  public generate() {
-    const timestamp = new Date(Date.now()).getTime;
-    
+  public generate(): string {
     if (this.INCREMENT > 4095) this.INCREMENT = 0;
     let out = (Date.now() - this.EPOCH).toString(2).padStart(42, "0");
     out += this.WORKER.toString(2).padStart(5, "0");
@@ -66,7 +64,7 @@ class Snowflake {
     return this.parseBigInt(out, 2).toString();
   }
 
-  private parseBigInt(str: string, base: number) {
+  private parseBigInt(str: string, base: number): bigint {
     let bigint = BigInt(0);
     for (let i = 0; i < str.length; i++) {
       let code = str[str.length - 1 - i].charCodeAt(0) - 48;
@@ -81,11 +79,11 @@ class Snowflake {
   * @param snowflake The snowflake to decompose
   * @returns The decomposed snowflake
   */
-  public decompose(snowflake: string) {
+  public decompose(snowflake: string): TSnowflake | boolean {
     const binary = BigInt(snowflake).toString(2);
-    const out: SnowflakeType = {
+    const out: TSnowflake = {
       epoch: this.EPOCH,
-      timestamp:(this.parseBigInt(binary.slice(0, -22), 2) + BigInt(this.EPOCH)).toString(),
+      timestamp: (this.parseBigInt(binary.slice(0, -22), 2) + BigInt(this.EPOCH)).toString(),
       worker: this.parseBigInt(binary.slice(-22, -17), 2).toString(),
       process: this.parseBigInt(binary.slice(-17, -12), 2).toString(),
       increment: this.parseBigInt(binary.slice(-12), 2).toString(),
@@ -94,5 +92,3 @@ class Snowflake {
     return out;
   }
 }
-
-export default Snowflake;
