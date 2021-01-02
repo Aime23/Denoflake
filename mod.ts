@@ -80,15 +80,20 @@ export class Snowflake {
   * @returns The decomposed snowflake
   */
   public decompose(snowflake: string): TSnowflake | boolean {
-    const binary = BigInt(snowflake).toString(2);
-    const out: TSnowflake = {
-      epoch: this.EPOCH,
-      timestamp: (this.parseBigInt(binary.slice(0, -22), 2) + BigInt(this.EPOCH)).toString(),
-      worker: this.parseBigInt(binary.slice(-22, -17), 2).toString(),
-      process: this.parseBigInt(binary.slice(-17, -12), 2).toString(),
-      increment: this.parseBigInt(binary.slice(-12), 2).toString(),
-      binary: binary,
-    };
-    return out;
+    if (!isNaN(parseInt(snowflake))) {
+      const binary = BigInt(snowflake).toString(2);
+      if (binary.length <= 64 && binary.length >= 23) {
+        const out: TSnowflake = {
+          epoch: this.EPOCH,
+          timestamp: (this.parseBigInt(binary.slice(0, -22), 2) + BigInt(this.EPOCH)).toString(),
+          worker: this.parseBigInt(binary.slice(-22, -17), 2).toString(),
+          process: this.parseBigInt(binary.slice(-17, -12), 2).toString(),
+          increment: this.parseBigInt(binary.slice(-12), 2).toString(),
+          binary: binary,
+        };
+        return out;
+      }
+    }
+    return false;
   }
 }
